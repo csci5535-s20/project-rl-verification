@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+
+\usepackage[top=50mm, bottom=50mm, left=50mm, right=50mm]{geometry}
+%\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+% for adding numbers for lines 
+\usepackage{lineno}
+%\usepackage{natbib}
+%\usepackage{tocbibind}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{float}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{color}
+\usepackage{lineno}
+\usepackage{fullpage}
+\usepackage[normalem]{ulem} 
+\usepackage{makeidx}
+\usepackage{xspace}
+\usepackage{wrapfig}
+\makeindex
+
+\newtheorem{theorem}{Theorem}
+
+\newtheorem{Definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{Theorem}{Theorem}
+\newtheorem{Lemma}{Lemma}
+\newtheorem{Claim}{Claim}
+\newtheorem{Notation}{Notation}
+\newtheorem{Algorithm}{Algorithm}
+\newtheorem{Observation}{Observation}
+
+
+%%%%%%%%%%%%%%% macros by yusu %%%%%%%%%%%%%
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{obs}{Observation}
+
+\definecolor{darkred}{rgb}{1, 0.1, 0.3}
+\definecolor{darkblue}{rgb}{0.1, 0.1, 1}
+\definecolor{darkgreen}{rgb}{0,0.6,0.5}
+\newcommand{\yusu}[1]		{{ \textcolor{darkblue} {{\sc Yusu Says:} #1}}}
+
+\newcommand {\mm}[1] {\ifmmode{#1}\else{\mbox{\(#1\)}}\fi}
+\newcommand{\denselist}{\itemsep 0pt\parsep=1pt\partopsep 0pt}
+
+\newcommand{\etal}		{{et al.}\xspace}
+\newcommand{\myeg}	{{e.g.}\xspace}
+
+\newcommand{\eps}		{\varepsilon}
+\newcommand{\myanceq}	{{\succeq}} %ancerster 
+\newcommand{\myanc}	{{\succ}} %ancerster 
+\newcommand{\mydesceq} {{\preceq}}
+\newcommand{\mydesc}		{{\prec}}
+\newcommand{\dgh}		{\delta_{\mathcal{GH}}} %GH distance
+\newcommand{\optdI}	{\mu}
+\newcommand{\myeps}	{\eps}
+\newcommand{\mygood}		{{good}\xspace}
+\newcommand{\myk}		{\tau} %{\kappa}
+\newcommand{\mydelta}	{\delta}
+\newcommand{\nTone}	{{\widehat{T}_{1, \mydelta}^{\hat{f}}}}
+\newcommand{\nTtwo}	{{\widehat{T}_{2, \mydelta}^{\hat{g}}}}
+\newcommand{\Img}		{{\mathrm{Im}}}
+\newcommand{\myL}		{{L}}
+\newcommand{\superlevel}		{{super-level}\xspace}
+\newcommand{\myC}		{{\mathrm{C}}}
+\newcommand{\setSL}	{{\mathcal{L}}}
+\newcommand{\slone}[1] 	{{\mathrm{L}^{(1)}_{#1}}}
+\newcommand{\sltwo}[1] 	{{\mathrm{L}^{(2)}_{#1}}}
+\newcommand{\hatT}		{{\widehat{T}}}
+\newcommand{\levelC}		{\mathrm{Ch}} %{{levelC}}
+\newcommand{\LCA}		{{LCA}}%common ancester
+\newcommand{\DPalg}	{{\sf DPgoodmap}}
+\newcommand{\modifyDPalg}	{{\sf modified-DP}}
+\newcommand{\myF}		{{\mathcal{F}}}
+\newcommand{\mypartial}[1]		{{partial-{#1}-good}\xspace}
+\newcommand{\myvalue}		{\mathrm{value}}
+\newcommand{\degbound}		{{degree-bound}\xspace}
+\newcommand{\mydepth}		{{depth}\xspace}
+\newcommand{\ep}		{{\varepsilon_p}}
+
+\newcommand{\Intdopt}		{{\mydelta^*}}
+\newcommand{\criSet}		{{\Pi}}
+\newcommand{\Tcal}			{\mathcal{T}}
+\newcommand{\mycost}		{{\mathrm{cost}}}
+\newcommand{\uTone}		{{|T_1^f|}}
+\newcommand{\uTwo}		{{|T_2^g|}}
+\newcommand{\uT}				{{|T|}}
+\newcommand{\mywF}		{{w^F}}
+\newcommand{\mykpara}	{{\myk_\mydelta}}
+\newcommand{\newdepth}	{{depth}}
+\newcommand{\newtau}	{{\widehat{\tau}}}
+
+\newcommand{\sensiblepair}     {{sensible-pair}\xspace}
+\newcommand{\Edgelistpair}      {{Edge-list pair}\xspace}
+\newcommand{\edgelistpair}      {{edge-list pair}\xspace}
+\newcommand{\Fnew}          {{F_{new}}}
+\newcommand{\Fold}          {{F_{old}}}
+%%%%%%%%%%%%%% macros by yusu end %%%%%%%%%%%%%
+
+\begin{document}
+
+\title{A Framework for Formal Verification to Correct Actions in Reinforcement Learning: \\
+A Proposal}
+ 
+\author{
+{Ethan Hobbs} \and {Vikas Nataraja}
+}
+
+\maketitle
+
+\setcounter{page}{1}
+
+
+
+\section{Project Overview}
+Reinforcement Learning has risen to prominence in recent years especially in the area of robotics and autonomous vehicles. However, much like deep learning models, reinforcement learning algorithms can often be a blackbox in terms of the policy the agent learns in a given situation leading to an inability to generalize to new environments and constraints. We propose to use formal verification methods in conjunction with an agent’s actions to serve as a check on the policies the agent learns. Our implementation will synthesize a deterministic approximation of the agent’s policy which is inductive invariant to “shield” the neural policy from making an invalid action which violates the inductive invariant. Using this framework, the agent can learn to abandon an incorrect action in favor of taking a sub-optimal but valid action. The inductive invariant will act in tandem with the neural policy with minimal overhead. We expand on previous work done in the field of inductive synthesis frameworks applied to reinforcement learning seen in \cite{zhu:2019} specifically focusing on the verification portions of their study. Our goal will be to prove that the verification algorithm in \cite{zhu:2019} will always produce a safe state. Currently in the algorithm, there is a condition that if there are not any safe states that the state space will be reduced by half, and the algorithm will repeat. This method seems unlikely to work in all cases so we want to assess its validity. Our goal will be to try to prove this algorithm will always function as intended and if it cannot be proven, investigate other conditions. One possible technique we would like to explore is \emph{backtracking} which is when the agent returns to a previously encountered safe state when the verification suggests the next state is unsafe or invalid. To go along with this, we would like to explore expanding our state space instead of limiting ourselves to a reduced space.
+
+%Our goal will be to implement their framework and then extend it to a new more complex system where the formal methods proposed in Zhu et al. may break and require an extension.
+
+\section{Proposed Approach}
+Our approach contains two different components: an evaluation phase and a solution phase. First we will be evaluating the CEGIS (Counter Example-Guided Inductive Synthesis) verification algorithm to make sure that the agent always finds a solution. If that fails, we will then create new conditions and retry the same proof process on them. We propose to use back propagation through the state space and choosing a random previous safe state. The goal with these new false condition solutions is to prevent edge cases from causing the algorithm to not be able to complete. We believe they will solve the problem (assuming the original algorithm cannot be proven) because we are moving in the safe state space which will eliminate the possibility of the algorithm from getting stuck in an isolated region of the state space. We will be basing our work heavily on \cite{zhu:2019} which has extensive information about their algorithm in the supplementary information section. Our analysis will be a verification of the verification algorithm presented in that paper. 
+
+\section{Evaluation}
+We will be developing an evaluation test along the lines of \cite{zhu:2019} which used scenarios from OpenAI gym including inverted pendulum and cart pole as examples that their method worked. We will train our agent on either the same or similar scenarios. If we do not produce a new algorithm, we want to present the proof and proof strategy through an example that will be more easily understood. We see two possible options for evaluation based on the conditional nature of our project. The first is a successful proof of the verification while the second will be a proof of any other method or an explanation of why the proof cannot be constructed. In either case, we also expect to have a basic implementation of a reinforcement learning system with the shielding described in \cite{zhu:2019}.  
+
+% \section{Related Work}
+% \cite{zhu:2019} focused on implementing a two-pronged system where the concept of safety and safety verification were both baked into the synthesis of a deterministic program with an inductive invariant alongside the neural policy. \cite{sun:2019} used a similar formal verification approach to verify the actions of an autonomous robot by constructing a finite state abstraction and performing reachability analysis over the search space. \cite{singh:2019} introduced a method to certify deep neural networks by using a novel abstract interpreter which relied on a combination of floating-point polyhedra and activation functions such as ReLU and the sigmoid. \cite{chen:2019} focused on relational verification represented as a Markov Decision Process (MDP) solvable via reinforcement learning. \cite{verma:2018} presented a novel reinforcement learning framework to represent policies as high-level programming language capable of generating interpretable and verifiable agent policies. 
+
+% \newpage
+\bibliographystyle{unsrt}
+\bibliography{references} % Entries are in the "references.bib" file
+\end{document}
